@@ -15,8 +15,8 @@ import Fullscreen from './fullscreen';
 import html5 from './html5';
 import Listeners from './listeners';
 import media from './media';
-import Ads from './plugins/ads';
-import PreviewThumbnails from './plugins/preview-thumbnails';
+// import Ads from './plugins/ads';
+// import PreviewThumbnails from './plugins/preview-thumbnails';
 import source from './source';
 import Storage from './storage';
 import support from './support';
@@ -188,14 +188,15 @@ class Plyr {
               this.config.loop.active = true;
             }
 
-            // TODO: replace fullscreen.iosNative with this playsinline config option
-            // YouTube requires the playsinline in the URL
-            if (this.isYouTube) {
-              this.config.playsinline = truthy.includes(url.searchParams.get('playsinline'));
-              this.config.youtube.hl = url.searchParams.get('hl'); // TODO: Should this be setting language?
-            } else {
-              this.config.playsinline = true;
-            }
+            // // TODO: replace fullscreen.iosNative with this playsinline config option
+            // // YouTube requires the playsinline in the URL
+            // if (this.isYouTube) {
+            //   this.config.playsinline = truthy.includes(url.searchParams.get('playsinline'));
+            //   this.config.youtube.hl = url.searchParams.get('hl'); // TODO: Should this be setting language?
+            // } else {
+            //   this.config.playsinline = true;
+            // }
+            this.config.playsinline = true;
           }
         } else {
           // <div> with attributes
@@ -302,10 +303,10 @@ class Plyr {
     // Global listeners
     this.listeners.global();
 
-    // Setup ads if provided
-    if (this.config.ads.enabled) {
-      this.ads = new Ads(this);
-    }
+    // // Setup ads if provided
+    // if (this.config.ads.enabled) {
+    //   this.ads = new Ads(this);
+    // }
 
     // Autoplay if required
     if (this.isHTML5 && this.config.autoplay) {
@@ -315,10 +316,10 @@ class Plyr {
     // Seek time will be recorded (in listeners.js) so we can prevent hiding controls for a few seconds after seek
     this.lastSeekTime = 0;
 
-    // Setup preview thumbnails if enabled
-    if (this.config.previewThumbnails.enabled) {
-      this.previewThumbnails = new PreviewThumbnails(this);
-    }
+    // // Setup preview thumbnails if enabled
+    // if (this.config.previewThumbnails.enabled) {
+    //   this.previewThumbnails = new PreviewThumbnails(this);
+    // }
   }
 
   // ---------------------------------------
@@ -332,17 +333,17 @@ class Plyr {
     return this.provider === providers.html5;
   }
 
-  get isEmbed() {
-    return this.isYouTube || this.isVimeo;
-  }
+  // get isEmbed() {
+  //   return this.isYouTube || this.isVimeo;
+  // }
 
-  get isYouTube() {
-    return this.provider === providers.youtube;
-  }
+  // get isYouTube() {
+  //   return this.provider === providers.youtube;
+  // }
 
-  get isVimeo() {
-    return this.provider === providers.vimeo;
-  }
+  // get isVimeo() {
+  //   return this.provider === providers.vimeo;
+  // }
 
   get isVideo() {
     return this.type === types.video;
@@ -690,15 +691,15 @@ class Plyr {
    * Get the minimum allowed speed
    */
   get minimumSpeed() {
-    if (this.isYouTube) {
-      // https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
-      return Math.min(...this.options.speed);
-    }
+    // if (this.isYouTube) {
+    //   // https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
+    //   return Math.min(...this.options.speed);
+    // }
 
-    if (this.isVimeo) {
-      // https://github.com/vimeo/player.js/#setplaybackrateplaybackrate-number-promisenumber-rangeerrorerror
-      return 0.5;
-    }
+    // if (this.isVimeo) {
+    //   // https://github.com/vimeo/player.js/#setplaybackrateplaybackrate-number-promisenumber-rangeerrorerror
+    //   return 0.5;
+    // }
 
     // https://stackoverflow.com/a/32320020/1191319
     return 0.0625;
@@ -708,15 +709,15 @@ class Plyr {
    * Get the maximum allowed speed
    */
   get maximumSpeed() {
-    if (this.isYouTube) {
-      // https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
-      return Math.max(...this.options.speed);
-    }
+    // if (this.isYouTube) {
+    //   // https://developers.google.com/youtube/iframe_api_reference#setPlaybackRate
+    //   return Math.max(...this.options.speed);
+    // }
 
-    if (this.isVimeo) {
-      // https://github.com/vimeo/player.js/#setplaybackrateplaybackrate-number-promisenumber-rangeerrorerror
-      return 2;
-    }
+    // if (this.isVimeo) {
+    //   // https://github.com/vimeo/player.js/#setplaybackrateplaybackrate-number-promisenumber-rangeerrorerror
+    //   return 2;
+    // }
 
     // https://stackoverflow.com/a/32320020/1191319
     return 16;
@@ -1179,35 +1180,40 @@ class Plyr {
     clearTimeout(this.timers.controls);
     clearTimeout(this.timers.resized);
 
-    // Provider specific stuff
-    if (this.isHTML5) {
-      // Restore native video controls
-      ui.toggleNativeControls.call(this, true);
+    // Restore native video controls
+    ui.toggleNativeControls.call(this, true);
 
-      // Clean up
-      done();
-    } else if (this.isYouTube) {
-      // Clear timers
-      clearInterval(this.timers.buffering);
-      clearInterval(this.timers.playing);
+    // Clean up
+    done();
+    // // Provider specific stuff
+    // if (this.isHTML5) {
+    //   // Restore native video controls
+    //   ui.toggleNativeControls.call(this, true);
 
-      // Destroy YouTube API
-      if (this.embed !== null && is.function(this.embed.destroy)) {
-        this.embed.destroy();
-      }
+    //   // Clean up
+    //   done();
+    // } else if (this.isYouTube) {
+    //   // Clear timers
+    //   clearInterval(this.timers.buffering);
+    //   clearInterval(this.timers.playing);
 
-      // Clean up
-      done();
-    } else if (this.isVimeo) {
-      // Destroy Vimeo API
-      // then clean up (wait, to prevent postmessage errors)
-      if (this.embed !== null) {
-        this.embed.unload().then(done);
-      }
+    //   // Destroy YouTube API
+    //   if (this.embed !== null && is.function(this.embed.destroy)) {
+    //     this.embed.destroy();
+    //   }
 
-      // Vimeo does not always return
-      setTimeout(done, 200);
-    }
+    //   // Clean up
+    //   done();
+    // } else if (this.isVimeo) {
+    //   // Destroy Vimeo API
+    //   // then clean up (wait, to prevent postmessage errors)
+    //   if (this.embed !== null) {
+    //     this.embed.unload().then(done);
+    //   }
+
+    //   // Vimeo does not always return
+    //   setTimeout(done, 200);
+    // }
   }
 
   /**

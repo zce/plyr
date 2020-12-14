@@ -157,7 +157,7 @@ Object.entries(build.css).forEach(([filename, entry]) => {
       .src(src)
       .pipe(plumber())
       .pipe(sass())
-      .pipe(postcss([customprops(), autoprefixer(), clean()]))
+      // .pipe(postcss([customprops(), autoprefixer(), clean()]))
       .pipe(size(sizeOptions))
       .pipe(gulp.dest(dist)),
   );
